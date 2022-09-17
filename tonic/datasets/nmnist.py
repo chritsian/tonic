@@ -1,5 +1,5 @@
 import os
-from typing import Callable, Optional
+from typing import Callable, List, Optional
 
 import numpy as np
 from tonic.dataset import Dataset
@@ -68,6 +68,7 @@ class NMNIST(Dataset):
         transform: Optional[Callable] = None,
         target_transform: Optional[Callable] = None,
         transforms: Optional[Callable] = None,
+        classes: Optional[List] = ["Test", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     ):
         super().__init__(
             save_to,
@@ -94,6 +95,9 @@ class NMNIST(Dataset):
 
         file_path = os.path.join(self.location_on_system, self.folder_name)
         for path, dirs, files in os.walk(file_path):
+            class_label = path.split("/")[-1]
+            if class_label not in classes:
+                continue
             files.sort()
             for file in files:
                 if file.endswith("bin"):
